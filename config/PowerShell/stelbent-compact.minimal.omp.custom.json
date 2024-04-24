@@ -11,7 +11,7 @@
           "type": "time",
           "foreground": "#689f38",
           "properties": {
-            "time_format": "15:04:05"
+            "time_format": "2006-01-02 15:04:05"
           },
           "style": "plain",
           "template": " {{ .CurrentDate | date .Format }} <#757575,>|</>"
