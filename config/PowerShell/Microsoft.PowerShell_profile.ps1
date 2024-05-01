@@ -5,11 +5,11 @@
 # 実行ポリシーの変更
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
-#予測インテリセンスを有効化
+# 予測インテリセンスを有効化
 Set-PSReadLineOption -PredictionSource History
 
 # 重複した履歴を保存しないように
-Set-PSReadLineOption -PredictionSource History
+Set-PSReadLineOption -HistoryNoDuplicates
 
 # ベル音の無効化
 Set-PSReadlineOption -BellStyle None
