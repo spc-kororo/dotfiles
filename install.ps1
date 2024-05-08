@@ -23,4 +23,10 @@ New-Item -ItemType SymbolicLink -Path $HOME/.config/git/ignore -Target $REPO_HOM
 New-Item -ItemType SymbolicLink -Path $HOME/.minttyrc -Target $REPO_HOME/config/git-bash-windows/.minttyrc
 New-Item -ItemType SymbolicLink -Path $HOME/.config/git/git-prompt.sh -Target $REPO_HOME/config/git-bash-windows/git-prompt.sh
 
+# WindowsTerminal
+if (!(Get-Command wt | Where-object { $_.Name -match $cmd })) {
+    winget install Microsoft.WindowsTerminal -s winget
+}
+New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json -Target $REPO_HOME/config/WindowsTerminal/settings.json
+
 Pause
