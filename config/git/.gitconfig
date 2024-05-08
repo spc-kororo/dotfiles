@@ -1,0 +1,20 @@
+[alias]
+    pushf = push --force-with-lease --force-if-includes
+[color]
+    ui = auto
+[commit]
+    verbose = true
+[core]
+    autocrlf = input
+    editor = code --wait
+    ignorecase = false
+    safecrlf = true
+    quotepath = false
+[pull]
+    ff = only
+[push]
+    autoSetupRemote = true
+    default = current
+
+[include]
+    path = .gitconfig.local

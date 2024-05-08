@@ -13,9 +13,14 @@ if (!(Get-Command oh-my-posh | Where-object { $_.Name -match $cmd })) {
 }
 New-Item -ItemType SymbolicLink -Path $HOME/Documents/PowerShell -Target $REPO_HOME/config/PowerShell
 
-# Git-bash
-New-Item -ItemType SymbolicLink -Path $HOME/.minttyrc -Target $REPO_HOME/config/git-bash-windows/.minttyrc
+# Git
+if (!(Get-Command git | Where-object { $_.Name -match $cmd })) {
+    winget install Git.Git -s winget
+}
 New-Item -ItemType Directory -Force -Path $HOME/.config/git
+New-Item -ItemType SymbolicLink -Path $HOME/.gitconfig -Target $REPO_HOME/config/git/.gitconfig
+New-Item -ItemType SymbolicLink -Path $HOME/.config/git/ignore -Target $REPO_HOME/config/git/.gitignore
+New-Item -ItemType SymbolicLink -Path $HOME/.minttyrc -Target $REPO_HOME/config/git-bash-windows/.minttyrc
 New-Item -ItemType SymbolicLink -Path $HOME/.config/git/git-prompt.sh -Target $REPO_HOME/config/git-bash-windows/git-prompt.sh
 
 Pause
