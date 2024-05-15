@@ -1,5 +1,6 @@
 [alias]
     pushf = push --force-with-lease --force-if-includes
+    tree = log --graph --pretty=format:'%x09%C(auto)%h %Cgreen%ad%Creset %C(cyan ul)%an%Creset %C(auto)%s %d' --date=format-local:'%Y-%m-%d %H:%M'
 [color]
     ui = auto
 [commit]
