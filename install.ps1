@@ -10,6 +10,14 @@ $REPO_HOME = $PSScriptRoot
 # PowerShell
 if (!(Get-Command oh-my-posh | Where-object { $_.Name -match $cmd })) {
     winget install JanDeDobbeleer.OhMyPosh -s winget
+
+    # 高速化
+    # 参考：https://bitto.jp/powershell-startup-fast/
+    Set-Alias ngen @(
+        Get-ChildItem (join-path ${env:\windir} "Microsoft.NET\Framework") ngen.exe -recurse |
+        Sort-Object -descending lastwritetime
+    )[0].fullName
+    [appdomain]::currentdomain.getassemblies() | ForEach-Object{ngen $_.location}
 }
 New-Item -ItemType SymbolicLink -Path $HOME/Documents/PowerShell -Target $REPO_HOME/config/PowerShell
 
