@@ -7,6 +7,7 @@
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 # 予測インテリセンスを有効化
+# ※適用は「→」キー
 Set-PSReadLineOption -PredictionSource History
 
 # 重複した履歴を保存しないように
@@ -20,3 +21,6 @@ Set-PSReadlineOption -BellStyle None
 
 # プロンプトカスタマイズモジュールの初期設定
 oh-my-posh init pwsh --config "$HOME\Documents\PowerShell\stelbent-compact.minimal.omp.custom.json" | Invoke-Expression
+
+# 文字コード変更
+[Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding('utf-8')
