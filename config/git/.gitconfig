@@ -16,6 +16,9 @@
 [push]
     autoSetupRemote = true
     default = current
+[rebase]
+    autostash = true
+    autosqaush = true
 
 [include]
     path = .gitconfig.local
