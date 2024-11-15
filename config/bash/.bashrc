@@ -130,3 +130,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+LANG=ja_JP.UTF8
+
