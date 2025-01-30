@@ -11,6 +11,8 @@
     ignorecase = false
     safecrlf = true
     quotepath = false
+[diff "sjis"]
+    textconv = iconv -f sjis
 [pull]
     ff = only
 [push]
