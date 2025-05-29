@@ -1,24 +1,30 @@
 # 管理者権限へ昇格
 # 参考：https://qiita.com/sakekasunuts/items/63a4023887348722b416#ps1実行時に自動的に昇格させたい
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole("Administrators")) {
-    Start-Process powershell.exe "-File `"$PSCommandPath`"" -Verb RunAs
+    if (!(Get-Command pwsh | Where-object { $_.Name -match $cmd })) {
+        winget install Microsoft.PowerShell -s winget
+    }
+
+    Start-Process pwsh.exe "-File `"$PSCommandPath`"" -Verb RunAs
     exit
 }
 
 $REPO_HOME = $PSScriptRoot
 
 # PowerShell
+## Oh My Posh
 if (!(Get-Command oh-my-posh | Where-object { $_.Name -match $cmd })) {
     winget install JanDeDobbeleer.OhMyPosh -s winget
-
-    # 高速化
-    # 参考：https://bitto.jp/powershell-startup-fast/
-    Set-Alias ngen @(
-        Get-ChildItem (join-path ${env:\windir} "Microsoft.NET\Framework") ngen.exe -recurse |
-        Sort-Object -descending lastwritetime
-    )[0].fullName
-    [appdomain]::currentdomain.getassemblies() | ForEach-Object{ngen $_.location}
 }
+## 高速化
+## 参考：https://bitto.jp/powershell-startup-fast/
+Set-Alias ngen @(
+    Get-ChildItem (join-path ${env:\windir} "Microsoft.NET\Framework") ngen.exe -recurse |
+    Sort-Object -descending lastwritetime
+)[0].fullName
+[appdomain]::currentdomain.getassemblies() | ForEach-Object { ngen $_.location }
+
+## config
 New-Item -ItemType SymbolicLink -Path $HOME/Documents/PowerShell -Target $REPO_HOME/config/PowerShell
 
 # Git
