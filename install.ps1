@@ -11,6 +11,32 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 $REPO_HOME = $PSScriptRoot
 
+# 作業ディレクトリの作成
+$tempDir = $env:TEMP | Join-Path -ChildPath "dotfiles"
+if (Test-Path $tempDir) {
+    Remove-Item -Path $tempDir\* -Force
+}
+else {
+    mkdir $tempDir
+}
+
+# Font
+## Nerd Fontのダウンロード
+downloadFile("https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/Inconsolata.zip", $tempDir)
+
+## プログラミングフォントのダウンロード
+downloadFile("https://github.com/tomokuni/Myrica/raw/master/product/Myrica.zip", $tempDir)
+
+## インストール
+$fonts = (New-Object -ComObject Shell.Application).Namespace(0x14)
+Get-ChildItem -Path $tempDir\* -Include *.zip | ForEach-Object {
+    $destDir = $_.FullName.Substring(0, $_.FullName.LastIndexOf('.'))
+    Expand-Archive -Path $_.FullName -DestinationPath $destDir
+    Get-ChildItem -Path $destDir\* -Include *.tt? | ForEach-Object {
+        $fonts.CopyHere($_.fullname)
+    }
+}
+
 # PowerShell
 ## Oh My Posh
 if (!(Get-Command oh-my-posh | Where-object { $_.Name -match $cmd })) {
@@ -41,6 +67,13 @@ New-Item -ItemType SymbolicLink -Path $HOME/.config/git/git-prompt.sh -Target $R
 if (!(Get-Command wt | Where-object { $_.Name -match $cmd })) {
     winget install Microsoft.WindowsTerminal -s winget
 }
-New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json -Target $REPO_HOME/config/WindowsTerminal/settings.json
+New-Item -ItemType SymbolicLink -Force -Path $env:LOCALAPPDATA/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json -Target $REPO_HOME/config/WindowsTerminal/settings.json
 
 Pause
+
+##########################################################
+function downloadFile([string]$url, [string]$saveDir) {
+    $fileName = Split-Path $url -Leaf
+    $downloadFilePath = $saveDir | Join-Path -ChildPath $fileName
+    Invoke-WebRequest $url -OutFile $downloadFilePath
+}
