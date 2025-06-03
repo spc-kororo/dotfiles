@@ -1,3 +1,5 @@
+# Git Bashのプロンプト表示をカスタマイズ
+# 参考：https://qiita.com/hf7777hi/items/7585c3aa5423a44eef35
 
 PS1='\[\033]0;$TITLEPREFIX:$PWD\007\]' # set window title
 PS1="$PS1"'\n'                 # new line
