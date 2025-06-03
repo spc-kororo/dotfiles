@@ -51,23 +51,24 @@ Set-Alias ngen @(
 [appdomain]::currentdomain.getassemblies() | ForEach-Object { ngen $_.location }
 
 ## config
-New-Item -ItemType SymbolicLink -Path $HOME/Documents/PowerShell -Target $REPO_HOME/config/PowerShell
+New-Item -ItemType SymbolicLink -Path $HOME/Documents/PowerShell -Target $REPO_HOME/config/powershell
 
 # Git
 if (!(Get-Command git | Where-object { $_.Name -match $cmd })) {
     winget install Git.Git -s winget
 }
-New-Item -ItemType Directory -Force -Path $HOME/.config/git
-New-Item -ItemType SymbolicLink -Path $HOME/.gitconfig -Target $REPO_HOME/config/git/.gitconfig
-New-Item -ItemType SymbolicLink -Path $HOME/.config/git/ignore -Target $REPO_HOME/config/git/.gitignore
-New-Item -ItemType SymbolicLink -Path $HOME/.minttyrc -Target $REPO_HOME/config/git-bash-windows/.minttyrc
-New-Item -ItemType SymbolicLink -Path $HOME/.config/git/git-prompt.sh -Target $REPO_HOME/config/git-bash-windows/git-prompt.sh
 
 # WindowsTerminal
 if (!(Get-Command wt | Where-object { $_.Name -match $cmd })) {
     winget install Microsoft.WindowsTerminal -s winget
 }
 New-Item -ItemType SymbolicLink -Force -Path $env:LOCALAPPDATA/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json -Target $REPO_HOME/config/WindowsTerminal/settings.json
+
+# config
+New-Item -ItemType Directory -Force -Path $HOME/.config
+Get-ChildItem -Path $REPO_HOME/config/* | ForEach-Object {
+    New-Item -ItemType SymbolicLink -Path "$HOME/.config/$($_.Name)" -Target $_.FullName
+}
 
 Pause
 

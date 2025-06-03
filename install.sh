@@ -1,16 +1,22 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -x
 
 # TODO: 見直しする
 REPO_HOME="${INSTALL_DIR:-$HOME/repos/dotfiles}"
+source "$REPO_HOME/config/bash/xdegenv.sh"
 
 # bash
+sudo ln -sfv "$REPO_HOME/config/bash/xdgenv.sh" /etc/profile.d/xdgenv.sh
 ln -sfv "$REPO_HOME/config/bash/.bashrc" "$HOME/.bashrc"
 ln -sfv "$REPO_HOME/config/bash/.bash_aliases" "$HOME/.bash_aliases"
 
-# Git
-ln -sfv "$REPO_HOME/config/git/.gitconfig" "$HOME/.gitconfig"
-mkdir -p "$HOME/.config/git"
-ln -sfv "$REPO_HOME/config/git/.gitignore" "$HOME/.config/git/ignore"
+# XDG
+mkdir -p \
+    "$XDG_CONFIG_HOME" \
+    "$XDG_CACHE_HOME" \
+    "$XDG_DATA_HOME" \
+    "$XDG_STATE_HOME"
+ln -sfv "$REPO_HOME/config/"* "$XDG_CONFIG_HOME"
 
 # Font
 # 参考：https://qiita.com/query1000/items/6ea7665529b022eb5f45

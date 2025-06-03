@@ -1,6 +1,5 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
 if [ -f ~/.git-completion.sh ]; then
     source ~/.git-completion.sh
 fi
@@ -132,4 +131,3 @@ if ! shopt -oq posix; then
 fi
 
 LANG=ja_JP.UTF8
-
