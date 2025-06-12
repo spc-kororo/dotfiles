@@ -38,10 +38,6 @@ Get-ChildItem -Path $tempDir\* -Include *.zip | ForEach-Object {
 }
 
 # PowerShell
-## Oh My Posh
-if (!(Get-Command oh-my-posh | Where-object { $_.Name -match $cmd })) {
-    winget install JanDeDobbeleer.OhMyPosh -s winget
-}
 ## 高速化
 ## 参考：https://bitto.jp/powershell-startup-fast/
 Set-Alias ngen @(
@@ -56,6 +52,11 @@ New-Item -ItemType SymbolicLink -Path $HOME/Documents/PowerShell -Target $REPO_H
 # Git
 if (!(Get-Command git | Where-object { $_.Name -match $cmd })) {
     winget install Git.Git -s winget
+}
+
+# Startship
+if (!(Get-Command starship | Where-object { $_.Name -match $cmd })) {
+    winget install --id Starship.Starship
 }
 
 # WindowsTerminal

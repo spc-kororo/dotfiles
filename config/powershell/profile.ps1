@@ -20,7 +20,7 @@ Set-PSReadLineKeyHandler -Key Tab -Function Complete
 Set-PSReadlineOption -BellStyle None
 
 # プロンプトカスタマイズモジュールの初期設定
-oh-my-posh init pwsh --config "$HOME\Documents\PowerShell\stelbent-compact.minimal.omp.custom.json" | Invoke-Expression
+Invoke-Expression (&starship init powershell)
 
 # 文字コード変更
 [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding('utf-8')

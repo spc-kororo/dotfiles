@@ -18,6 +18,9 @@ mkdir -p \
     "$XDG_STATE_HOME"
 ln -sfv "$REPO_HOME/config/"* "$XDG_CONFIG_HOME"
 
+# starship
+curl -sS https://starship.rs/install.sh | sh
+
 # Font
 # 参考：https://qiita.com/query1000/items/6ea7665529b022eb5f45
 FONT_CONF_PATH=/etc/fonts/local.conf
