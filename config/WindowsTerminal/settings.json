@@ -68,7 +68,8 @@
             {
                 "face": "Inconsolata Nerd Font Mono",
                 "size": 16
-            }
+            },
+            "intenseTextStyle": "all"
         },
         "list": 
         [
