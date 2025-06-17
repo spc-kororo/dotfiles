@@ -1,149 +1,104 @@
+# エディターの補完を設定スキーマに合わせて取得
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# プロンプトの書式文字列
 format = """
-[](#9A348E)\
+[](orange)\
+$time\
+[](fg:orange bg:yellow)\
+$battery\
+[](fg:yellow bg:current_line)\
 $os\
-$username\
-[](bg:#DA627D fg:#9A348E)\
+$shell\
+[](fg:current_line bg:pink)\
 $directory\
-[](fg:#DA627D bg:#FCA17D)\
+[](fg:pink bg:purple)\
 $git_branch\
 $git_status\
-[](fg:#FCA17D bg:#86BBD8)\
-$c\
-$elixir\
-$elm\
-$golang\
-$gradle\
-$haskell\
-$java\
-$julia\
-$nodejs\
-$nim\
-$rust\
-$scala\
-[](fg:#86BBD8 bg:#06969A)\
-$docker_context\
-[](fg:#06969A bg:#33658A)\
-$time\
-[ ](fg:#33658A)\
+[](fg:purple bg:background)\
+$cmd_duration
+$username\
+$character\
 """
 
-# Disable the blank line at the start of the prompt
-# add_newline = false
+continuation_prompt = "     "
+palette = "dracula"
 
-# You can also replace your username with a neat symbol like   or disable this
-# and use the os module below
+[battery]
+disabled = false
+format = "[ $symbol$percentage ]($style)"
+
+[[battery.display]]
+threshold = 100
+style = "fg:background bg:yellow"
+
+[[battery.display]]
+threshold = 30
+style = "bold fg:red bg:yellow"
+
+[character]
+error_symbol = "[ ](bold red)"
+success_symbol = "[ ](bold green)"
+
+[cmd_duration]
+style = "bold underline fg:background bg:red"
+format = " [[](red) $duration[](red)]($style)"
+show_milliseconds = true
+min_time = 5000
+
 [username]
 show_always = true
-style_user = "bg:#9A348E"
-style_root = "bg:#9A348E"
-format = '[$user ]($style)'
+style_user = "bold green"
+style_root = "bold red"
+format = "[$user]($style) on "
 disabled = false
 
-# An alternative to the username module which displays a symbol that
-# represents the current operating system
 [os]
-style = "bg:#9A348E"
-disabled = true # Disabled by default
+style = "bold bg:current_line"
+format = "[ $symbol]($style)"
+disabled = false
+
+[shell]
+style = "bold bg:current_line"
+format = "[$indicator ]($style)"
+disabled = false
 
 [directory]
-style = "bg:#DA627D"
+style = "bold fg:background bg:pink"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
-
-# Here is how you can shorten some long paths by text replacement
-# similar to mapped_locations in Oh My Posh:
-[directory.substitutions]
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = " "
-"Pictures" = " "
-# Keep in mind that the order matters. For example:
-# "Important Documents" = " 󰈙 "
-# will not be replaced, because "Documents" was already substituted before.
-# So either put "Important Documents" before "Documents" or use the substituted version:
-# "Important 󰈙 " = " 󰈙 "
-
-[c]
-symbol = " "
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
-
-[cpp]
-symbol = " "
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
-
-[docker_context]
-symbol = " "
-style = "bg:#06969A"
-format = '[ $symbol $context ]($style)'
-
-[elixir]
-symbol = " "
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
-
-[elm]
-symbol = " "
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
+truncate_to_repo = true
 
 [git_branch]
 symbol = ""
-style = "bg:#FCA17D"
+style = "bold fg:background bg:purple"
 format = '[ $symbol $branch ]($style)'
 
 [git_status]
-style = "bg:#FCA17D"
+style = "bold fg:background bg:purple"
 format = '[$all_status$ahead_behind ]($style)'
-
-[golang]
-symbol = " "
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
-
-[gradle]
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
-
-[haskell]
-symbol = " "
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
-
-[java]
-symbol = " "
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
-
-[julia]
-symbol = " "
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
-
-[nodejs]
-symbol = ""
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
-
-[nim]
-symbol = "󰆥 "
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
-
-[rust]
-symbol = ""
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
-
-[scala]
-symbol = " "
-style = "bg:#86BBD8"
-format = '[ $symbol ($version) ]($style)'
+ahead = '${count}'
+diverged = '⇕${ahead_count}${behind_count}'
+behind = '${count}'
 
 [time]
 disabled = false
-time_format = "%R" # Hour:Minute Format
-style = "bg:#33658A"
-format = '[ ♥ $time ]($style)'
+# time_format = "%F %T"       # [Year-Mounth-Day] [Hour:Minute:Second]
+time_format = "%m/%d %R"               # [Mounth]/[Day] [Hour:Minute]
+style = "bold fg:background bg:orange"
+format = '[ 󰃰 $time ]($style)'
+
+# ドラキュラテーマのカラーパレットを登録
+[palettes.dracula]
+background = "#282a36"
+current_line = "#44475a"
+foreground = "#f8f8f2"
+comment = "#6272a4"
+cyan = "#8be9fd"
+green = "#50fa7b"
+orange = "#ffb86c"
+pink = "#ff79c6"
+purple = "#bd93f9"
+red = "#ff5555"
+yellow = "#f1fa8c"
