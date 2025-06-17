@@ -59,6 +59,14 @@ if (!(Get-Command starship | Where-object { $_.Name -match $cmd })) {
     winget install --id Starship.Starship
 }
 
+# clink
+# ※パスが通らないフォルダにインストールされるため、一時的にパスを通しておく
+$env:Path += ";C:\Program Files (x86)\clink";
+if (!(Get-Command clink | Where-object { $_.Name -match $cmd })) {
+    winget install clink
+    [System.Environment]::SetEnvironmentVariable("CLINK_PROFILE", "$HOME/.config/clink", [System.EnvironmentVariableTarget]::User)
+}
+
 # WindowsTerminal
 if (!(Get-Command wt | Where-object { $_.Name -match $cmd })) {
     winget install Microsoft.WindowsTerminal -s winget
