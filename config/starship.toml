@@ -46,23 +46,6 @@ format = " [[](red) $duration[](red)]($style)"
 show_milliseconds = true
 min_time = 5000
 
-[username]
-show_always = true
-style_user = "bold green"
-style_root = "bold red"
-format = "[$user]($style) on "
-disabled = false
-
-[os]
-style = "bold bg:current_line"
-format = "[ $symbol]($style)"
-disabled = false
-
-[shell]
-style = "bold bg:current_line"
-format = "[$indicator ]($style)"
-disabled = false
-
 [directory]
 style = "bold fg:background bg:pink"
 format = "[ $path ]($style)"
@@ -82,12 +65,29 @@ ahead = '${count}'
 diverged = '⇕${ahead_count}${behind_count}'
 behind = '${count}'
 
+[os]
+style = "bold bg:current_line"
+format = "[ $symbol]($style)"
+disabled = false
+
+[shell]
+style = "bold bg:current_line"
+format = "[$indicator ]($style)"
+disabled = false
+
 [time]
 disabled = false
 # time_format = "%F %T"       # [Year-Mounth-Day] [Hour:Minute:Second]
 time_format = "%m/%d %R"               # [Mounth]/[Day] [Hour:Minute]
 style = "bold fg:background bg:orange"
 format = '[ 󰃰 $time ]($style)'
+
+[username]
+show_always = true
+style_user = "bold green"
+style_root = "bold red"
+format = "[$user]($style) on "
+disabled = false
 
 # ドラキュラテーマのカラーパレットを登録
 [palettes.dracula]
