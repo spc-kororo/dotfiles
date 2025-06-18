@@ -1,1 +1,4 @@
 /config/git/config.local
+/config/clink/clink.log
+/config/clink/clink_history*
+/config/clink/clink_errorlevel*

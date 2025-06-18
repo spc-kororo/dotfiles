@@ -1,0 +1,104 @@
+# エディターの補完を設定スキーマに合わせて取得
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# プロンプトの書式文字列
+format = """
+[](orange)\
+$time\
+[](fg:orange bg:yellow)\
+$battery\
+[](fg:yellow bg:current_line)\
+$os\
+$shell\
+[](fg:current_line bg:pink)\
+$directory\
+[](fg:pink bg:purple)\
+$git_branch\
+$git_status\
+[](fg:purple bg:background)\
+$cmd_duration
+$username\
+$character\
+"""
+
+continuation_prompt = "     "
+palette = "dracula"
+
+[battery]
+disabled = false
+format = "[ $symbol$percentage ]($style)"
+
+[[battery.display]]
+threshold = 100
+style = "fg:background bg:yellow"
+
+[[battery.display]]
+threshold = 30
+style = "bold fg:red bg:yellow"
+
+[character]
+error_symbol = "[ ](bold red)"
+success_symbol = "[ ](bold green)"
+
+[cmd_duration]
+style = "bold underline fg:background bg:red"
+format = " [[](red) $duration[](red)]($style)"
+show_milliseconds = true
+min_time = 5000
+
+[directory]
+style = "bold fg:background bg:pink"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+truncate_to_repo = true
+
+[git_branch]
+symbol = ""
+style = "bold fg:background bg:purple"
+format = '[ $symbol $branch ]($style)'
+
+[git_status]
+style = "bold fg:background bg:purple"
+format = '[$all_status$ahead_behind ]($style)'
+ahead = '${count}'
+diverged = '⇕${ahead_count}${behind_count}'
+behind = '${count}'
+
+[os]
+style = "bold bg:current_line"
+format = "[ $symbol]($style)"
+disabled = false
+
+[shell]
+style = "bold bg:current_line"
+format = "[$indicator ]($style)"
+disabled = false
+
+[time]
+disabled = false
+# time_format = "%F %T"       # [Year-Mounth-Day] [Hour:Minute:Second]
+time_format = "%m/%d %R"               # [Mounth]/[Day] [Hour:Minute]
+style = "bold fg:background bg:orange"
+format = '[ 󰃰 $time ]($style)'
+
+[username]
+show_always = true
+style_user = "bold green"
+style_root = "bold red"
+format = "[$user]($style) on "
+disabled = false
+
+# ドラキュラテーマのカラーパレットを登録
+[palettes.dracula]
+background = "#282a36"
+current_line = "#44475a"
+foreground = "#f8f8f2"
+comment = "#6272a4"
+cyan = "#8be9fd"
+green = "#50fa7b"
+orange = "#ffb86c"
+pink = "#ff79c6"
+purple = "#bd93f9"
+red = "#ff5555"
+yellow = "#f1fa8c"

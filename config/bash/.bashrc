@@ -131,3 +131,6 @@ if ! shopt -oq posix; then
 fi
 
 LANG=ja_JP.UTF8
+
+# Setup Starship
+eval "$(starship init bash)"
