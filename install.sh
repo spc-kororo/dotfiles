@@ -16,7 +16,17 @@ mkdir -p \
     "$XDG_CACHE_HOME" \
     "$XDG_DATA_HOME" \
     "$XDG_STATE_HOME"
-ln -sfv "$REPO_HOME/config/"* "$XDG_CONFIG_HOME"
+excludeList=(
+    "bash"
+    "clink"
+    "mintty"
+    "PowerShell"
+    "WindowsTerminal"
+)
+excludePattern="$(IFS="|"; echo "${excludeList[*]}")"
+find "$REPO_HOME/config" -maxdepth 1 -mindepth 1 |
+    grep -E -v "^$REPO_HOME/config/($excludePattern)" |
+    xargs -i ln -sfv {} "$XDG_CONFIG_HOME/"
 
 # starship
 curl -sS https://starship.rs/install.sh | sh

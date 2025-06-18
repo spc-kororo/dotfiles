@@ -122,10 +122,17 @@ if (!(Get-Command wt | Where-object { $_.Name -match $cmd })) {
 }
 New-Item -ItemType SymbolicLink -Force -Path $env:LOCALAPPDATA/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json -Target $REPO_HOME/config/WindowsTerminal/settings.json
 
-# config
+# 各種config
+$excludedList = @(
+    "bash"
+    , "PowerShell"
+    , "WindowsTerminal"
+)
 New-Item -ItemType Directory -Force -Path $HOME/.config
-Get-ChildItem -Path $REPO_HOME/config/* | ForEach-Object {
-    New-Item -ItemType SymbolicLink -Path "$HOME/.config/$($_.Name)" -Target $_.FullName
+Get-ChildItem -Path $REPO_HOME/config/* | Where-Object { $excludedList -notcontains $_.Name } | ForEach-Object {
+    New-Item -ItemType SymbolicLink -Force -Path "$HOME/.config/$($_.Name)" -Target $_.FullName
 }
+New-Item -ItemType SymbolicLink -Force -Path "$HOME/.bashrc" -Target "$REPO_HOME/config/bash/.bashrc"
+New-Item -ItemType SymbolicLink -Force -Path "$HOME/.bash_aliases" -Target "$REPO_HOME/config/bash/.bash_aliases"
 
 Pause
