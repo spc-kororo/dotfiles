@@ -3,7 +3,7 @@ set -x
 
 # TODO: 見直しする
 REPO_HOME="${INSTALL_DIR:-$HOME/repos/dotfiles}"
-source "$REPO_HOME/config/bash/xdegenv.sh"
+source "$REPO_HOME/config/bash/xdgenv.sh"
 
 # bash
 sudo ln -sfv "$REPO_HOME/config/bash/xdgenv.sh" /etc/profile.d/xdgenv.sh
