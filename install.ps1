@@ -77,12 +77,23 @@ Get-ChildItem -Path $tempDir\* -Include *.zip | ForEach-Object {
 
 # PowerShell
 ## 高速化
-## 参考：https://bitto.jp/powershell-startup-fast/
+## 参考：https://秀丸マクロ.net/?page=nobu_tool_hm_powershell_ngen
 Set-Alias ngen @(
     Get-ChildItem (join-path ${env:\windir} "Microsoft.NET\Framework") ngen.exe -recurse |
     Sort-Object -descending lastwritetime
 )[0].fullName
-[appdomain]::currentdomain.getassemblies() | ForEach-Object { ngen $_.location }
+Set-Alias ngen64 @(
+    Get-ChildItem (join-path ${env:\windir} "Microsoft.NET\Framework64") ngen.exe -recurse |
+    Sort-Object -descending lastwritetime
+)[0].fullName
+[appdomain]::currentdomain.getassemblies() | ForEach-Object {
+    if ($_.location -match $(‘\\assembly\\GAC_64’)) {
+        ngen64 install $_.location
+    }
+    else {
+        ngen install $_.location
+    }
+}
 
 ## config
 New-Item -ItemType SymbolicLink -Path $HOME/Documents/PowerShell -Target $REPO_HOME/config/powershell
