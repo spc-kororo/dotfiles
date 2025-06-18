@@ -74,6 +74,7 @@ disabled = false
 style = "bold bg:current_line"
 format = "[$indicator ]($style)"
 disabled = false
+powershell_indicator = "pwsh"
 
 [time]
 disabled = false
