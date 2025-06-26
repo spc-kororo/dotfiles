@@ -46,6 +46,12 @@ else {
     mkdir $tempDir
 }
 
+# toolsディレクトリの作成
+$toolsDir = $REPO_HOME | Join-Path -ChildPath "tools"
+if (!Test-Path $toolsDir) {
+    mkdir $toolsDir
+}
+
 # Font
 ## Nerd Fontのダウンロード
 downloadFile "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/Inconsolata.zip" $tempDir
@@ -108,12 +114,26 @@ if (!(Get-Command starship | Where-object { $_.Name -match $cmd })) {
     winget install --id Starship.Starship
 }
 
+# fzf
+if (!(Get-Command fzf | Where-object { $_.Name -match $cmd })) {
+    winget install fzf
+}
+
 # clink
 # ※パスが通らないフォルダにインストールされるため、一時的にパスを通しておく
-$env:Path += ";C:\Program Files (x86)\clink";
+$CLINK_HOME = "C:\Program Files (x86)\clink";
+$env:Path += ";$CLINK_HOME";
 if (!(Get-Command clink | Where-object { $_.Name -match $cmd })) {
     winget install clink
     [System.Environment]::SetEnvironmentVariable("CLINK_PROFILE", "$HOME\.config\clink", [System.EnvironmentVariableTarget]::User)
+}
+
+## clink-fzf
+if (!(Test-Path "$toolsDir/clink-fzf")) {
+    Push-Location $toolsDir
+    git clone https://github.com/chrisant996/clink-fzf.git
+    New-Item -ItemType SymbolicLink -Path "$CLINK_HOME/fzf.lua" -Target "$toolsDir/clink-fzf/fzf.lua"
+    Pop-Location
 }
 
 # WindowsTerminal
