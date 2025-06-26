@@ -113,7 +113,7 @@ if (!(Get-Command starship | Where-object { $_.Name -match $cmd })) {
 $env:Path += ";C:\Program Files (x86)\clink";
 if (!(Get-Command clink | Where-object { $_.Name -match $cmd })) {
     winget install clink
-    [System.Environment]::SetEnvironmentVariable("CLINK_PROFILE", "$HOME/.config/clink", [System.EnvironmentVariableTarget]::User)
+    [System.Environment]::SetEnvironmentVariable("CLINK_PROFILE", "$HOME\.config\clink", [System.EnvironmentVariableTarget]::User)
 }
 
 # WindowsTerminal
