@@ -6,6 +6,10 @@
 # 実行ポリシーの変更
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
+# PSFzfの読み込みとAlias有効化
+Import-Module PSFzf
+Enable-PsFzfAliases
+
 # 予測インテリセンスを有効化
 # ※適用は「→」キー
 Set-PSReadLineOption -PredictionSource History
@@ -13,11 +17,14 @@ Set-PSReadLineOption -PredictionSource History
 # 重複した履歴を保存しないように
 Set-PSReadLineOption -HistoryNoDuplicates
 
+# ベル音の無効化
+Set-PSReadlineOption -BellStyle None
+
 # 予測インテリセンスをbash風に
 Set-PSReadLineKeyHandler -Key Tab -Function Complete
 
-# ベル音の無効化
-Set-PSReadlineOption -BellStyle None
+# 一部コマンドのタブ補完機能を有効化
+Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
 
 # プロンプトカスタマイズモジュールの初期設定
 Invoke-Expression (&starship init powershell)

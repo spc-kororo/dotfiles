@@ -119,6 +119,9 @@ if (!(Get-Command fzf | Where-object { $_.Name -match $cmd })) {
     winget install fzf
 }
 
+# PowerShell向けFZFモジュール
+Install-Module -Name PSFzf -scope currentUser
+
 # clink
 # ※パスが通らないフォルダにインストールされるため、一時的にパスを通しておく
 $CLINK_HOME = "C:\Program Files (x86)\clink";
