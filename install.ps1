@@ -122,6 +122,11 @@ if (!(Get-Command fzf | Where-object { $_.Name -match $cmd })) {
 # PowerShell向けFZFモジュール
 Install-Module -Name PSFzf -scope currentUser
 
+# zoxide
+if (!(Get-Command zoxide | Where-object { $_.Name -match $cmd })) {
+    winget install ajeetdsouza.zoxide
+}
+
 # clink
 # ※パスが通らないフォルダにインストールされるため、一時的にパスを通しておく
 $CLINK_HOME = "C:\Program Files (x86)\clink";
@@ -136,6 +141,14 @@ if (!(Test-Path "$toolsDir/clink-fzf")) {
     Push-Location $toolsDir
     git clone https://github.com/chrisant996/clink-fzf.git
     New-Item -ItemType SymbolicLink -Path "$CLINK_HOME/fzf.lua" -Target "$toolsDir/clink-fzf/fzf.lua"
+    Pop-Location
+}
+
+## clink-zoxide
+if (!(Test-Path "$toolsDir/clink-zoxide")) {
+    Push-Location $toolsDir
+    git clone https://github.com/shunsambongi/clink-zoxide.git
+    New-Item -ItemType SymbolicLink -Path "$CLINK_HOME/zoxide.lua" -Target "$toolsDir/clink-zoxide/zoxide.lua"
     Pop-Location
 }
 

@@ -26,6 +26,9 @@ Set-PSReadLineKeyHandler -Key Tab -Function Complete
 # 一部コマンドのタブ補完機能を有効化
 Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
 
+# zoxideの有効化
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
+
 # プロンプトカスタマイズモジュールの初期設定
 Invoke-Expression (&starship init powershell)
 
