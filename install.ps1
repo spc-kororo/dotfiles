@@ -85,7 +85,30 @@ Get-ChildItem -Path $tempDir\* -Include *.zip | ForEach-Object {
     }
 }
 
+# Git
+if (!(Get-Command git | Where-object { $_.Name -match $cmd })) {
+    winget install Git.Git -s winget
+}
+
+# Startship
+if (!(Get-Command starship | Where-object { $_.Name -match $cmd })) {
+    winget install --id Starship.Starship
+}
+
+# fzf
+if (!(Get-Command fzf | Where-object { $_.Name -match $cmd })) {
+    winget install fzf
+}
+
+# zoxide
+if (!(Get-Command zoxide | Where-object { $_.Name -match $cmd })) {
+    winget install ajeetdsouza.zoxide
+}
+
 # PowerShell
+## PowerShell向けFZFモジュール
+Install-Module -Name PSFzf -scope currentUser
+
 ## 高速化
 ## 参考：https://秀丸マクロ.net/?page=nobu_tool_hm_powershell_ngen
 Set-Alias ngen @(
@@ -104,32 +127,12 @@ Set-Alias ngen64 @(
         ngen install $_.location
     }
 }
+Get-ChildItem "$REPO_HOME/config/PowerShell/Modules" -Include *.dll -Recurse | ForEach-Object {
+    ngen64 install $_.FullName
+}
 
 ## config
 New-Item -ItemType SymbolicLink -Path $HOME/Documents/PowerShell -Target $REPO_HOME/config/powershell
-
-# Git
-if (!(Get-Command git | Where-object { $_.Name -match $cmd })) {
-    winget install Git.Git -s winget
-}
-
-# Startship
-if (!(Get-Command starship | Where-object { $_.Name -match $cmd })) {
-    winget install --id Starship.Starship
-}
-
-# fzf
-if (!(Get-Command fzf | Where-object { $_.Name -match $cmd })) {
-    winget install fzf
-}
-
-# PowerShell向けFZFモジュール
-Install-Module -Name PSFzf -scope currentUser
-
-# zoxide
-if (!(Get-Command zoxide | Where-object { $_.Name -match $cmd })) {
-    winget install ajeetdsouza.zoxide
-}
 
 # clink
 # ※パスが通らないフォルダにインストールされるため、一時的にパスを通しておく
