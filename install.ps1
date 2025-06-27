@@ -3,6 +3,10 @@ function downloadFile {
     param([string]$url, [string]$saveDir)
     $fileName = Split-Path $url -Leaf
     $downloadFilePath = Join-Path -Path $saveDir -ChildPath $fileName
+    if (Test-Path $downloadFilePath) {
+        return
+    }
+
     Invoke-WebRequest $url -OutFile $downloadFilePath
 }
 
@@ -40,7 +44,7 @@ $REPO_HOME = $PSScriptRoot
 # 作業ディレクトリの作成
 $tempDir = $env:TEMP | Join-Path -ChildPath "dotfiles"
 if (Test-Path $tempDir) {
-    Remove-Item -Path $tempDir\* -Force -Recurse
+    Remove-Item -Path $tempDir\* -Force -Recurse -Exclude *.zip
 }
 else {
     mkdir $tempDir
