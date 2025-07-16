@@ -175,6 +175,7 @@ New-Item -ItemType Directory -Force -Path $HOME/.config
 Get-ChildItem -Path $REPO_HOME/config/* | Where-Object { $excludedList -notcontains $_.Name } | ForEach-Object {
     New-Item -ItemType SymbolicLink -Force -Path "$HOME/.config/$($_.Name)" -Target $_.FullName
 }
+New-Item -ItemType SymbolicLink -Force -Path "$HOME/.bash_profile" -Target "$REPO_HOME/config/bash/.bash_profile"
 New-Item -ItemType SymbolicLink -Force -Path "$HOME/.bashrc" -Target "$REPO_HOME/config/bash/.bashrc"
 New-Item -ItemType SymbolicLink -Force -Path "$HOME/.bash_aliases" -Target "$REPO_HOME/config/bash/.bash_aliases"
 

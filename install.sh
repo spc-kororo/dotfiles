@@ -3,10 +3,10 @@ set -x
 
 # TODO: 見直しする
 REPO_HOME="${INSTALL_DIR:-$HOME/repos/dotfiles}"
-source "$REPO_HOME/config/bash/xdgenv.sh"
+. "$REPO_HOME/config/.bash_profile"
 
 # bash
-sudo ln -sfv "$REPO_HOME/config/bash/xdgenv.sh" /etc/profile.d/xdgenv.sh
+ln -sfv "$REPO_HOME/config/bash/.bash_profile" "$HOME/.bash_profile"
 ln -sfv "$REPO_HOME/config/bash/.bashrc" "$HOME/.bashrc"
 ln -sfv "$REPO_HOME/config/bash/.bash_aliases" "$HOME/.bash_aliases"
 

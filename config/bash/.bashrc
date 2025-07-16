@@ -1,127 +1,94 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-if [ -f ~/.git-completion.sh ]; then
-    source ~/.git-completion.sh
-fi
-if [ -f ~/.git-prompt.sh ]; then
-    source ~/.git-prompt.sh
-fi
-
-GIT_PS1_SHOWDIRTYSTATE=true
-GIT_PS1_SHOWUNTRACKEDFILES=true
-unset GIT_PS1_SHOWSTASHSTATE
-unset GIT_PS1_SHOWUPSTREAM
-
-# If not running interactively, don't do anything
+# 対話的に実行されていない場合は何もしない
 case $- in
-    *i*) ;;
-      *) return;;
+*i*) ;;
+*) return ;;
 esac
 
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
+# 重複行やスペースで始まる行を履歴に残さない
 HISTCONTROL=ignoreboth
 
-# append to the history file, don't overwrite it
+# コマンド実行前に、追記モードで履歴を記録する
 shopt -s histappend
+PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+# 保存する履歴の件数を設定する
+HISTSIZE=1000     # メモリ
+HISTFILESIZE=2000 # 履歴ファイル
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+# 履歴に日時を追加する
+HISTTIMEFORMAT="%Y/%m/%d %H:%M:%S "
+
+# コマンド実行時、ウィンドウサイズを確認して必要に応じて$LINESと$COLUMNSの値を更新する
 shopt -s checkwinsize
 
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
-
-# make less more friendly for non-text input files, see lesspipe(1)
+# lessの入力プリプロセッサを有効化する
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
-esac
-
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-    # PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-    # note: https://qiita.com/hmmrjn/items/60d2a64c9e5bf7c0fe60
-    PS1='\n\[\e[33m\]\D{%F %T}\[\e[0m\] \[\e[01;35m\]\w\[\e[0m\]\[\e[01;32m\]$(__git_ps1)\[\e[0m\]\n\$ '
+# プロンプト表示をカスタマイズする
+if type starship >/dev/null 2>&1; then
+  # starshipを有効化する
+  eval "$(starship init bash)"
 else
+  # starshipがインストールされていない環境（.devcontainer等）を考慮したカスタマイズ設定を行う
+
+  # 作業中の chroot を識別する変数を設定する
+  if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+  fi
+
+  # 色付きプロンプト機能を有効化する
+  case "$TERM" in
+  xterm-color | *-256color)
+    color_prompt=yes
+    ;;
+  esac
+  case $(uname -a) in
+  MINGW*)
+    force_color_prompt=yes
+    ;;
+  esac
+  if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+      color_prompt=yes
+    else
+      color_prompt=
+    fi
+  fi
+
+  # Gitのプロンプト表示機能を有効化する
+  GIT_PS1_SHOWDIRTYSTATE=true     # ファイル変更の有無
+  GIT_PS1_SHOWUNTRACKEDFILES=true # 新規ファイルの有無
+  GIT_PS1_SHOWUPSTREAM=true       # HEADとそのアップストリームの違い
+  GIT_PS1_SHOWSTASHSTATE=true     # スタッシュの有無
+
+  # プロンプト表示のカスタマイズ
+  if [ "$color_prompt" = yes ]; then
+    # NOTE: https://qiita.com/hmmrjn/items/60d2a64c9e5bf7c0fe60
+    PS1='\n\[\e[33m\]\D{%F %T}\[\e[0m\] \[\e[01;35m\]\w\[\e[0m\]\[\e[01;32m\]`__git_ps1`\[\e[0m\]\n\$ '
+  else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+  fi
+  unset color_prompt force_color_prompt
 fi
-unset color_prompt force_color_prompt
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
-
-# enable color support of ls and also add handy aliases
+# lsのカラーサポートを有効にし、便利なエイリアスも追加する
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  alias ls='ls --color=auto'
+  alias dir='dir --color=auto'
+  alias vdir='vdir --color=auto'
 
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
 fi
 
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
-
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
+# エイリアス設定を読み込む
 if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+  . ~/.bash_aliases
 fi
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
+# bashの補完機能を有効化する
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
     . /usr/share/bash-completion/bash_completion
@@ -129,8 +96,3 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
-LANG=ja_JP.UTF8
-
-# Setup Starship
-eval "$(starship init bash)"
