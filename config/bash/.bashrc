@@ -96,3 +96,70 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# fzfを有効化する
+if type fzf >/dev/null 2>&1; then
+  # fzfの表示・動作をカスタマイズ
+  FZF_THEME_DRACULA="--color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9 --color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4"
+  FZF_PREVIEW_TREE_COMMAND="tree -CN {} | head -200"
+  FZF_PREVIEW_BAT_COMMAND="bat --plain --color=always --line-range=:200"
+  case $(uname -a) in
+  MINGW*)
+    # NOTE: Git Bashで利用するtreeコマンドはSJIS出力するため、文字化け回避のため文字コード変換を行う
+    FZF_PREVIEW_TREE_COMMAND=$(echo $FZF_PREVIEW_TREE_COMMAND | sed 's/head/iconv -f SJIS -t UTF-8 | head/g')
+    ;;
+  esac
+
+  export FZF_DEFAULT_OPTS="--height=90% --reverse $FZF_THEME_DRACULA"
+  export FZF_CTRL_R_OPTS="--preview-window=down,40%,wrap --preview='((type bat > /dev/null) && echo {} | $FZF_PREVIEW_BAT_COMMAND --language=sh) || echo {}'"
+  export FZF_CTRL_T_OPTS="--preview-window=down,40%,wrap --preview='((type bat > /dev/null) && $FZF_PREVIEW_BAT_COMMAND {}) || head -200 {}'"
+  export FZF_ALT_C_OPTS="--preview-window=right --preview='$FZF_PREVIEW_TREE_COMMAND'"
+
+  _fzf_comprun() {
+    local command=$1
+    shift
+
+    case "$command" in
+    cd) fzf --preview="$FZF_PREVIEW_TREE_COMMAND" "$@" ;;
+    export | unset) fzf --preview="eval 'echo \$'{}" "$@" ;;
+    # ssh) fzf --preview='dig {}' "$@" ;;
+    *) fzf --preview="((type bat > /dev/null) && $FZF_PREVIEW_BAT_COMMAND {}) || head -200" "$@" ;;
+    esac
+  }
+
+  # fzfのシェル統合を有効化
+  case $(uname -a) in
+  Linux*)
+    # NOTE: FZFのバージョンによって有効化方法が異なるため、バージョンをチェックして分岐する
+    # 参考：https://qiita.com/akegashi/items/35bde2af80682ca77a70
+    fzf_version=$(fzf --version | awk -F. '{printf "%2d%02d%02d", $1,$2,$3}')
+    if [ 04800 -le "$fzf_version" ]; then
+      eval "$(fzf --bash)"
+    else
+      if [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
+        . /usr/share/doc/fzf/examples/key-bindings.bash
+      fi
+      if [ -f /usr/share/bash-completion/completions/fzf ]; then
+        . /usr/share/bash-completion/completions/fzf
+      fi
+    fi
+    unset fzf_version
+    ;;
+  MINGW*)
+    # NOTE: Git Bashの場合に「stdout is not a tty」と表示されてしまうため、抑止するためにコマンドを分ける
+    # 参考: https://qiita.com/kimisyo/items/e6b9c453d5bb002f1486
+    alias fzf="fzf.exe"
+    eval "$(fzf --bash)"
+    ;;
+  esac
+fi
+
+# zoxideを有効化する
+if type zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init bash)"
+fi
+
+# batのオプションを有効化する
+if type bat >/dev/null 2>&1; then
+  export BAT_THEME=Dracula
+fi

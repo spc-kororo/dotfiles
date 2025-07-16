@@ -105,6 +105,24 @@ if (!(Get-Command zoxide | Where-object { $_.Name -match $cmd })) {
     winget install ajeetdsouza.zoxide
 }
 
+# bat
+if (!(Get-Command bat | Where-object { $_.Name -match $cmd })) {
+    winget install sharkdp.bat
+}
+
+# Linux系コマンド
+## less
+if (!(Get-Command less | Where-object { $_.Name -match $cmd })) {
+    winget install jftuga.less
+}
+## tree
+if (!(Get-Command tree.exe | Where-object { $_.Name -match $cmd })) {
+    winget install --id GnuWin32.Tree
+
+    # インストールしただけではパスが通らないので、個別に設定する
+    [System.Environment]::SetEnvironmentVariable("PATH", "$env:Path;C:\Program Files (x86)\GnuWin32\bin", [System.EnvironmentVariableTarget]::User)
+}
+
 # PowerShell
 ## PowerShell向けFZFモジュール
 Install-Module -Name PSFzf -scope currentUser

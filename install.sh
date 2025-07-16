@@ -31,6 +31,17 @@ find "$REPO_HOME/config" -maxdepth 1 -mindepth 1 |
 # starship
 curl -sS https://starship.rs/install.sh | sh
 
+# fzf
+sudo apt install fzf
+
+# zoxide
+sudo apt install zoxide
+
+# bat
+sudo apt install bat
+mkdir -p ~/.local/bin
+ln -s /usr/bin/batcat ~/.local/bin/bat
+
 # Font
 # 参考：https://qiita.com/query1000/items/6ea7665529b022eb5f45
 FONT_CONF_PATH=/etc/fonts/local.conf
