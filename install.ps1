@@ -111,6 +111,14 @@ if (!(Get-Command bat | Where-object { $_.Name -match $cmd })) {
 }
 
 # Linux系コマンド
+## shellcheck
+if (!(Get-Command shellcheck | Where-object { $_.Name -match $cmd })) {
+    winget install --id koalaman.shellcheck
+}
+## shfmt
+if (!(Get-Command shfmt | Where-object { $_.Name -match $cmd })) {
+    winget install shfmt
+}
 ## less
 if (!(Get-Command less | Where-object { $_.Name -match $cmd })) {
     winget install jftuga.less

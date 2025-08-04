@@ -26,7 +26,13 @@ excludeList=(
 excludePattern="$(IFS="|"; echo "${excludeList[*]}")"
 find "$REPO_HOME/config" -maxdepth 1 -mindepth 1 |
     grep -E -v "^$REPO_HOME/config/($excludePattern)" |
-    xargs -i ln -sfv {} "$XDG_CONFIG_HOME/"
+
+# Shell関連
+## shellcheck
+sudo apt install shellcheck
+
+## shfmt
+sudo apt install shfmt
 
 # starship
 curl -sS https://starship.rs/install.sh | sh
