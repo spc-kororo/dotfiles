@@ -56,10 +56,10 @@ else
   fi
 
   # Gitのプロンプト表示機能を有効化する
-  GIT_PS1_SHOWDIRTYSTATE=true     # ファイル変更の有無
-  GIT_PS1_SHOWUNTRACKEDFILES=true # 新規ファイルの有無
-  GIT_PS1_SHOWUPSTREAM=true       # HEADとそのアップストリームの違い
-  GIT_PS1_SHOWSTASHSTATE=true     # スタッシュの有無
+  export GIT_PS1_SHOWDIRTYSTATE=true     # ファイル変更の有無
+  export GIT_PS1_SHOWUNTRACKEDFILES=true # 新規ファイルの有無
+  export GIT_PS1_SHOWUPSTREAM=true       # HEADとそのアップストリームの違い
+  export GIT_PS1_SHOWSTASHSTATE=true     # スタッシュの有無
 
   # プロンプト表示のカスタマイズ
   if [ "$color_prompt" = yes ]; then
@@ -73,7 +73,7 @@ fi
 
 # lsのカラーサポートを有効にし、便利なエイリアスも追加する
 if [ -x /usr/bin/dircolors ]; then
-  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  (test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)") || eval "$(dircolors -b)"
   alias ls='ls --color=auto'
   alias dir='dir --color=auto'
   alias vdir='vdir --color=auto'
@@ -84,15 +84,17 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # エイリアス設定を読み込む
-if [ -f ~/.bash_aliases ]; then
-  . ~/.bash_aliases
+if [ -f "$HOME/.bash_aliases" ]; then
+  . "$HOME/.bash_aliases"
 fi
 
 # bashの補完機能を有効化する
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
+    # shellcheck disable=SC1091
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
+    # shellcheck disable=SC1091
     . /etc/bash_completion
   fi
 fi
@@ -106,7 +108,7 @@ if type fzf >/dev/null 2>&1; then
   case $(uname -a) in
   MINGW*)
     # NOTE: Git Bashで利用するtreeコマンドはSJIS出力するため、文字化け回避のため文字コード変換を行う
-    FZF_PREVIEW_TREE_COMMAND=$(echo $FZF_PREVIEW_TREE_COMMAND | sed 's/head/iconv -f SJIS -t UTF-8 | head/g')
+    FZF_PREVIEW_TREE_COMMAND=$(echo "$FZF_PREVIEW_TREE_COMMAND" | sed 's/head/iconv -f SJIS -t UTF-8 | head/g')
     ;;
   esac
 
@@ -137,9 +139,11 @@ if type fzf >/dev/null 2>&1; then
       eval "$(fzf --bash)"
     else
       if [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
+        # shellcheck disable=SC1091
         . /usr/share/doc/fzf/examples/key-bindings.bash
       fi
       if [ -f /usr/share/bash-completion/completions/fzf ]; then
+        # shellcheck disable=SC1091
         . /usr/share/bash-completion/completions/fzf
       fi
     fi
@@ -148,7 +152,7 @@ if type fzf >/dev/null 2>&1; then
   MINGW*)
     # NOTE: Git Bashの場合に「stdout is not a tty」と表示されてしまうため、抑止するためにコマンドを分ける
     # 参考: https://qiita.com/kimisyo/items/e6b9c453d5bb002f1486
-    alias fzf="fzf.exe"
+    fzf() { fzf.exe "$@"; }
     eval "$(fzf --bash)"
     ;;
   esac

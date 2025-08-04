@@ -3,7 +3,7 @@ set -x
 
 # TODO: 見直しする
 REPO_HOME="${INSTALL_DIR:-$HOME/repos/dotfiles}"
-. "$REPO_HOME/config/.bash_profile"
+. "$REPO_HOME/config/bash/.bash_profile"
 
 # bash
 ln -sfv "$REPO_HOME/config/bash/.bash_profile" "$HOME/.bash_profile"
@@ -26,6 +26,7 @@ excludeList=(
 excludePattern="$(IFS="|"; echo "${excludeList[*]}")"
 find "$REPO_HOME/config" -maxdepth 1 -mindepth 1 |
     grep -E -v "^$REPO_HOME/config/($excludePattern)" |
+    xargs -I {} echo ln -sfv {} "$XDG_CONFIG_HOME/"
 
 # Shell関連
 ## shellcheck
