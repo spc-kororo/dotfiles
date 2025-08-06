@@ -51,9 +51,16 @@ else {
 }
 
 # toolsディレクトリの作成
-$toolsDir = $REPO_HOME | Join-Path -ChildPath "tools"
-if (!Test-Path $toolsDir) {
-    mkdir $toolsDir
+$repoToolsDir = $REPO_HOME | Join-Path -ChildPath "tools"
+if (!Test-Path $repoToolsDir) {
+    mkdir $repoToolsDir
+}
+$userToolsDir = "$HOME/tools"
+if (!Test-Path $userToolsDir) {
+    mkdir $userToolsDir
+}
+if (!Test-Path "$userToolsDir/dotfiles") {
+    New-Item -ItemType SymbolicLink -Path "$userToolsDir/dotfiles" -Target "$repoToolsDir"
 }
 
 # Font
@@ -130,6 +137,12 @@ if (!(Get-Command tree.exe | Where-object { $_.Name -match $cmd })) {
     # インストールしただけではパスが通らないので、個別に設定する
     [System.Environment]::SetEnvironmentVariable("PATH", "$env:Path;C:\Program Files (x86)\GnuWin32\bin", [System.EnvironmentVariableTarget]::User)
 }
+## fzf-tab-completion
+if (!(Test-Path "$repoToolsDir/fzf-tab-completion")) {
+    Push-Location $repoToolsDir
+    git clone https://github.com/lincheney/fzf-tab-completion.git
+    Pop-Location
+}
 
 # PowerShell
 ## PowerShell向けFZFモジュール
@@ -170,18 +183,18 @@ if (!(Get-Command clink | Where-object { $_.Name -match $cmd })) {
 }
 
 ## clink-fzf
-if (!(Test-Path "$toolsDir/clink-fzf")) {
-    Push-Location $toolsDir
+if (!(Test-Path "$repoToolsDir/clink-fzf")) {
+    Push-Location $repoToolsDir
     git clone https://github.com/chrisant996/clink-fzf.git
-    New-Item -ItemType SymbolicLink -Path "$CLINK_HOME/fzf.lua" -Target "$toolsDir/clink-fzf/fzf.lua"
+    New-Item -ItemType SymbolicLink -Path "$CLINK_HOME/fzf.lua" -Target "$repoToolsDir/clink-fzf/fzf.lua"
     Pop-Location
 }
 
 ## clink-zoxide
-if (!(Test-Path "$toolsDir/clink-zoxide")) {
-    Push-Location $toolsDir
+if (!(Test-Path "$repoToolsDir/clink-zoxide")) {
+    Push-Location $repoToolsDir
     git clone https://github.com/shunsambongi/clink-zoxide.git
-    New-Item -ItemType SymbolicLink -Path "$CLINK_HOME/zoxide.lua" -Target "$toolsDir/clink-zoxide/zoxide.lua"
+    New-Item -ItemType SymbolicLink -Path "$CLINK_HOME/zoxide.lua" -Target "$repoToolsDir/clink-zoxide/zoxide.lua"
     Pop-Location
 }
 

@@ -148,14 +148,28 @@ if type fzf >/dev/null 2>&1; then
       fi
     fi
     unset fzf_version
+
+    # fzf-tab-completionのパスを設定
+    fzf_tab_comp_shell="$MY_BIN_PATH/fzf-bash-completion_bash.sh"
     ;;
   MINGW*)
     # NOTE: Git Bashの場合に「stdout is not a tty」と表示されてしまうため、抑止するためにコマンドを分ける
     # 参考: https://qiita.com/kimisyo/items/e6b9c453d5bb002f1486
     fzf() { fzf.exe "$@"; }
     eval "$(fzf --bash)"
+
+    # fzf-tab-completionのパスを設定
+    fzf_tab_comp_shell="$HOME/tools/dotfiles/fzf-tab-completion/bash/fzf-bash-completion.sh"
     ;;
   esac
+
+  # fzf-tab-completionを有効化
+  if [ -f "$fzf_tab_comp_shell" ]; then
+    # shellcheck disable=SC1090
+    . "$fzf_tab_comp_shell"
+    bind -x '"\t": fzf_bash_completion'
+  fi
+  unset fzf_tab_comp_shell
 fi
 
 # zoxideを有効化する

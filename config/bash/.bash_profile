@@ -10,4 +10,7 @@ export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 
+# 実行ファイルの置き場所
+export MY_BIN_PATH=$HOME/.local/bin
+
 test -f "$HOME/.bashrc" && . "$HOME/.bashrc"

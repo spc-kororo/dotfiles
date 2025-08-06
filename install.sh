@@ -5,6 +5,12 @@ set -x
 REPO_HOME="${INSTALL_DIR:-$HOME/repos/dotfiles}"
 . "$REPO_HOME/config/bash/.bash_profile"
 
+# toolsディレクトリの作成
+toolsDir="$REPO_HOME/tools"
+if [ ! -d "$toolsDir" ]; then
+  mkdir -p "$toolsDir"
+fi
+
 # bash
 ln -sfv "$REPO_HOME/config/bash/.bash_profile" "$HOME/.bash_profile"
 ln -sfv "$REPO_HOME/config/bash/.bashrc" "$HOME/.bashrc"
@@ -15,7 +21,8 @@ mkdir -p \
     "$XDG_CONFIG_HOME" \
     "$XDG_CACHE_HOME" \
     "$XDG_DATA_HOME" \
-    "$XDG_STATE_HOME"
+    "$XDG_STATE_HOME" \
+    "$MY_BIN_PATH"
 excludeList=(
     "bash"
     "clink"
@@ -41,12 +48,19 @@ curl -sS https://starship.rs/install.sh | sh
 # fzf
 sudo apt install fzf
 
+# fzf_bash_completion
+if [ ! -d "$toolsDir/fzf-tab-completion" ]; then
+  pushd "$toolsDir" || exit
+  git clone https://github.com/lincheney/fzf-tab-completion.git
+  ln -s "$toolsDir/fzf-tab-completion/bash/fzf-bash-completion.sh" "$MY_BIN_PATH/fzf-bash-completion_bash.sh"
+  popd || exit
+fi
+
 # zoxide
 sudo apt install zoxide
 
 # bat
 sudo apt install bat
-mkdir -p ~/.local/bin
 ln -s /usr/bin/batcat ~/.local/bin/bat
 
 # Font
