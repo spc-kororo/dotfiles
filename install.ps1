@@ -52,14 +52,14 @@ else {
 
 # toolsディレクトリの作成
 $repoToolsDir = $REPO_HOME | Join-Path -ChildPath "tools"
-if (!Test-Path $repoToolsDir) {
+if (!(Test-Path $repoToolsDir)) {
     mkdir $repoToolsDir
 }
 $userToolsDir = "$HOME/tools"
-if (!Test-Path $userToolsDir) {
+if (!(Test-Path $userToolsDir)) {
     mkdir $userToolsDir
 }
-if (!Test-Path "$userToolsDir/dotfiles") {
+if (!(Test-Path "$userToolsDir/dotfiles")) {
     New-Item -ItemType SymbolicLink -Path "$userToolsDir/dotfiles" -Target "$repoToolsDir"
 }
 
