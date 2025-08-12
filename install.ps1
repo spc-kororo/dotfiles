@@ -63,6 +63,13 @@ if (!(Test-Path "$userToolsDir/dotfiles")) {
     New-Item -ItemType SymbolicLink -Path "$userToolsDir/dotfiles" -Target "$repoToolsDir"
 }
 
+# Git Bash向けの実行ファイル置き場の作成
+$MY_BIN_PATH = "$HOME/.local/bin"
+$env:Path += ";$MY_BIN_PATH"
+if (!(Test-Path $MY_BIN_PATH)) {
+    mkdir $MY_BIN_PATH
+}
+
 # Font
 ## Nerd Fontのダウンロード
 downloadFile "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/Inconsolata.zip" $tempDir
@@ -134,13 +141,15 @@ if (!(Get-Command less | Where-object { $_.Name -match $cmd })) {
 if (!(Get-Command tree.exe | Where-object { $_.Name -match $cmd })) {
     winget install --id GnuWin32.Tree
 
-    # インストールしただけではパスが通らないので、個別に設定する
-    [System.Environment]::SetEnvironmentVariable("PATH", "$env:Path;C:\Program Files (x86)\GnuWin32\bin", [System.EnvironmentVariableTarget]::User)
+    # インストールしただけではパスが通らないので、パスが通るフォルダにシンボリックリンクを張る
+    New-Item -ItemType SymbolicLink -Path "$MY_BIN_PATH\tree.exe" -Target "C:\Program Files (x86)\GnuWin32\bin\tree.exe"
 }
 ## fzf-tab-completion
 if (!(Test-Path "$repoToolsDir/fzf-tab-completion")) {
     Push-Location $repoToolsDir
     git clone https://github.com/lincheney/fzf-tab-completion.git
+    # インストールしただけではパスが通らないので、パスが通るフォルダにシンボリックリンクを張る
+    New-Item -ItemType SymbolicLink -Path "$MY_BIN_PATH\fzf-bash-completion_bash.sh" -Target "$repoToolsDir\fzf-tab-completion\bash\fzf-bash-completion.sh"
     Pop-Location
 }
 

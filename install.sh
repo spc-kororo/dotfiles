@@ -61,7 +61,7 @@ sudo apt install zoxide
 
 # bat
 sudo apt install bat
-ln -s /usr/bin/batcat ~/.local/bin/bat
+ln -s /usr/bin/batcat "$MY_BIN_PATH/bat"
 
 # Font
 # 参考：https://qiita.com/query1000/items/6ea7665529b022eb5f45

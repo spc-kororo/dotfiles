@@ -13,4 +13,7 @@ export XDG_STATE_HOME=$HOME/.local/state
 # 実行ファイルの置き場所
 export MY_BIN_PATH=$HOME/.local/bin
 
+# パスの設定
+export PATH="$MY_BIN_PATH:$PATH"
+
 test -f "$HOME/.bashrc" && . "$HOME/.bashrc"
